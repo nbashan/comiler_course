@@ -39,7 +39,7 @@ for(var fname in file_list){
   }
 }
 
-writer.write("TOTAL BUY:${total_buy}\nTOTAL CELL:${total_cell}\n")
+writer.write("TOTAL BUY: ${total_buy}\nTOTAL CELL:${total_cell}\n")
 writer.close()
 
 // FUNCTIONS
@@ -47,13 +47,13 @@ writer.close()
 function HandleBuy(ProductName : String, Amount :int, Price : double){
   var temp_amout = Amount*Price
   total_buy += temp_amout
-  writer.write("###BUY <${ProductName}>###\n${temp_amout}\n") // write to buffer
+  writer.write("###BUY ${ProductName}###\n${temp_amout}\n") // write to buffer
 }
 
 function HandleCell(ProductName : String, Amount :int, Price : double){
   var temp_amout = Amount*Price
   total_cell += temp_amout
-  writer.write("$$$CELL <${ProductName}>$$$\n${temp_amout}\n") // write to buffer
+  writer.write("$$$CELL ${ProductName}$$$\n${temp_amout}\n") // write to buffer
 }
 
 
