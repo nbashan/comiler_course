@@ -1,6 +1,8 @@
 uses gw.util.GosuStringUtil
 uses java.io.*
 
+
+//  VARIABLES
 var path = "src//Tar0"
 
 var d = new File(path)
@@ -13,18 +15,19 @@ var total_buy =0.0
 var total_cell = 0.0
 
 
-
-
-
-
+// LOOP OVER FILE LIST
 for(var fname in file_list){
   var file_name = fname.split("\\.")
-  if(file_name[1] == "vm") {
-    var f2 = new File(path + '\\' + file_name[0] + ".vm")
 
-    using (var scanner = new Scanner(new BufferedReader(new FileReader(path + '\\' + file_name[0] + ".vm")))) {
+  if(file_name[1] == "vm") {
+    var currentFile = path + '\\' + file_name[0] + ".vm"
+    var f2 = new File(currentFile)
+
+    using (var scanner = new Scanner(new BufferedReader(new FileReader(currentFile)))) {
+      // LOOP OVER VM FILE
       while (scanner.hasNext()) {
         var line = scanner.nextLine().split(" ")
+
         if (line[0] == "buy") {
           HandleBuy(line[1],Integer.valueOf(line[2]),Double.valueOf(line[3]))
         }
@@ -39,6 +42,7 @@ for(var fname in file_list){
 writer.write("TOTAL BUY:${total_buy}\nTOTAL CELL:${total_cell}\n")
 writer.close()
 
+// FUNCTIONS
 
 function HandleBuy(ProductName : String, Amount :int, Price : double){
   var temp_amout = Amount*Price
