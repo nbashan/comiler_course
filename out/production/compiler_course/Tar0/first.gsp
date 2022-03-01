@@ -4,13 +4,12 @@ uses java.io.*
 
 //  VARIABLES
 var path = "src//Tar0"
-
+//var scannerIn = new Scanner(System.in)
+//var path = scannerIn.nextLine()
 var d = new File(path)
 var file_list = d.list()
-
 var file_write=new FileWriter(path + "//Tar0.asm")
 var writer=new BufferedWriter(file_write)
-
 var total_buy =0.0
 var total_cell = 0.0
 
@@ -21,8 +20,7 @@ for(var fname in file_list){
 
   if(file_name[1] == "vm") {
     var currentFile = path + '\\' + file_name[0] + ".vm"
-    var f2 = new File(currentFile)
-
+    writer.write(file_name[0] + '\n')
     using (var scanner = new Scanner(new BufferedReader(new FileReader(currentFile)))) {
       // LOOP OVER VM FILE
       while (scanner.hasNext()) {
@@ -39,7 +37,7 @@ for(var fname in file_list){
   }
 }
 
-writer.write("TOTAL BUY:${total_buy}\nTOTAL CELL:${total_cell}\n")
+writer.write("TOTAL BUY: ${total_buy}\nTOTAL CELL:${total_cell}\n")
 writer.close()
 
 // FUNCTIONS
@@ -47,16 +45,12 @@ writer.close()
 function HandleBuy(ProductName : String, Amount :int, Price : double){
   var temp_amout = Amount*Price
   total_buy += temp_amout
-  writer.write("###BUY <${ProductName}>###\n${temp_amout}\n") // write to buffer
+  writer.write("###BUY ${ProductName}###\n${temp_amout}\n") // write to buffer
 }
 
 function HandleCell(ProductName : String, Amount :int, Price : double){
   var temp_amout = Amount*Price
   total_cell += temp_amout
-  writer.write("$$$CELL <${ProductName}>$$$\n${temp_amout}\n") // write to buffer
+  writer.write("$$$CELL ${ProductName}$$$\n${temp_amout}\n") // write to buffer
 }
-
-
-
-
 

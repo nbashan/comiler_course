@@ -1,28 +1,30 @@
-###BUY <bread>###
+InputA
+###BUY bread###
 13.5
-###BUY <cheese>###
+###BUY cheese###
 10.6
-$$$CELL <cheese>$$$
+$$$CELL cheese$$$
 85.5
-###BUY <milk>###
+###BUY milk###
 24.8
-$$$CELL <chocolate>$$$
+$$$CELL chocolate$$$
 71.39999999999999
-###BUY <milk>###
+###BUY milk###
 22.400000000000002
-$$$CELL <chocolate>$$$
+$$$CELL chocolate$$$
 11.0
-###BUY <chocolate>###
+InputB
+###BUY chocolate###
 12.5
-$$$CELL <eggs>$$$
+$$$CELL eggs$$$
 621.0
-###BUY <cheese>###
+###BUY cheese###
 10.6
-$$$CELL <sugar>$$$
+$$$CELL sugar$$$
 82.5
-$$$CELL <flour>$$$
+$$$CELL flour$$$
 25.2
-###BUY <milk>###
+###BUY milk###
 11.100000000000001
-TOTAL BUY:105.5
+TOTAL BUY: 105.5
 TOTAL CELL:896.6
