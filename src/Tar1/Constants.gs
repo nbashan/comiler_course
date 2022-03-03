@@ -45,7 +45,7 @@ class Constants {
   public static var _POP_THIS :String as POP_THIS = ""
 
   //#########   PUSH POP THAT   #########
-  public static var PUSH_THAT = ""
-  public static var POP_THAT = ""
+  public static var _PUSH_THAT :String as PUSH_THAT = ""
+  public static var _POP_THAT :String as POP_THAT = ""
 
 }

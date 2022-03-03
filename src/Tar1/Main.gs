@@ -12,20 +12,15 @@ public class Main {
   public static function translateVmFile(inputFile: String, outputFile: String){
     var parser = new Parser(inputFile)
     var codeWriter = new CodeWriter(outputFile)
-    while(parser.hasMoreCommands()){
+    while(parser.advance()){
       var commandType = parser.getCommandType()
-      switch (commandType) {
-        case Constants.CommandType.C_ARITHMETIC:
-          codeWriter.writeArithmetic(parser.curerent_command)
-          break
-        case Constants.CommandType.C_PUSH:
-          codeWriter.writePushPop(commandType, parser.arg1(), parser.arg2())
-          break
-        case Constants.CommandType.C_POP:
-          codeWriter.writePushPop(commandType, parser.arg1(), parser.arg2())
+      switch (commandType){
+        case C_ARITHMETIC:
+          codeWriter.writeArithmetic(parser.getCommand())
           break
       }
-
     }
+    parser.closeFile()
+    codeWriter.closeFile()
   }
 }

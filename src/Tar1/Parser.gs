@@ -1,5 +1,7 @@
 package Tar1
 
+uses java.io.BufferedReader
+uses java.io.FileReader
 
 
 //Handles the parsing of a single .vm file
@@ -7,30 +9,35 @@ package Tar1
 //and provides convinent access to these components
 //Ignores all white spaces, and comments
 public class Parser {
-  public static var _curerent_command :String as curerent_command = ""
+  public static var _curerent_command :String as curerent_command
+  public static var _reader : BufferedReader as reader
 
   //opens the input file/stream and gets ready to parse it
   public construct(inputFile :String){
-
+    var file_read=new FileReader(inputFile)
+    reader=new BufferedReader(file_read)
   }
 
-  //are there more commands in the input
-  public function hasMoreCommands(): boolean{
-    return true
-  }
 
 
   //reads the next command from the input and makes it
   //the current command.
   //Should be called only if hasMoreCommands is true.
   //Initialy there is no current command
-  public function advance(){
-
+  public function advance(): boolean{
+    curerent_command = reader.readLine()
+    return curerent_command != null
   }
 
   //returns the command type of the current command
-  //
-  public function getCommandType(): Constants.CommandType {
+  public function getCommand(): String {
+    return  curerent_command
+  }
+
+  public function getCommandType(): Constants.CommandType{
+    if(Tools.arithmetic[getCommand().split(" ")[0]] != null){
+      return C_ARITHMETIC
+    }
     return null
   }
 
@@ -46,6 +53,10 @@ public class Parser {
   //C_PUSH, C_POP, C_FUNCTION, C_CALL
   public function arg2():int{
     return 0
+  }
+
+  function closeFile() : void {
+    reader.close()
   }
 }
 
