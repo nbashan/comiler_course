@@ -12,10 +12,12 @@ public class Parser {
   public static var _curerent_command :String as curerent_command
   public static var _reader : BufferedReader as reader
 
+
   //opens the input file/stream and gets ready to parse it
   public construct(inputFile :String){
     var file_read=new FileReader(inputFile)
     reader=new BufferedReader(file_read)
+    Tools.inputFile = inputFile.split("\\.")[0]
   }
 
 
@@ -35,8 +37,12 @@ public class Parser {
   }
 
   public function getCommandType(): Constants.CommandType{
-    if(Tools.arithmetic[getCommand().split(" ")[0]] != null){
+    var commandType = getCommand().split(" ")[0]
+    if(Tools.arithmetic[commandType] != null){
       return C_ARITHMETIC
+    }
+    if(commandType == "push" or commandType == "pop"){
+      return C_PUSH_POP
     }
     return null
   }

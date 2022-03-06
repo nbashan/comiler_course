@@ -3,8 +3,7 @@ package Tar1
 class Constants {
   public static enum CommandType {
     C_ARITHMETIC,//all arithmetic/logical commands
-    C_PUSH,
-    C_POP,
+    C_PUSH_POP,
     C_LABEL,
     C_GOTO,
     C_IF,

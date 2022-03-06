@@ -18,6 +18,9 @@ public class Main {
         case C_ARITHMETIC:
           codeWriter.writeArithmetic(parser.getCommand())
           break
+        case C_PUSH_POP:
+          codeWriter.writePushPop(parser.getCommand())
+          break
       }
     }
     parser.closeFile()

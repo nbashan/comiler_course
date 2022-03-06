@@ -1,2 +1,1 @@
-print(typeof({"" ->""}) )
-Main.translateVmFile("src\\files\\test1.vm","src\\files\\result.asm")
+Main.translateVmFile("src/files/StackTest.vm","src/files/StackTest.asm")
