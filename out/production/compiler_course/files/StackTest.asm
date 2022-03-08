@@ -341,7 +341,6 @@ A = M
 M = D
 @0
 M = M+1
-
 @SP
 AM=M-1
 D=M
@@ -351,19 +350,19 @@ D=M-D
 M=D
 @SP
 M=M+1
-
 @0
 AM=M-1
 D=-M
 M=D
 @SP
 M=M+1
-@0
-M=M-1
-A=M
+@SP
+AM=M-1
 D=M
-A=A-1
-M=D&M
+@SP
+AM=M-1
+D=D&M
+M=D
 @SP
 M=M+1
 @82
@@ -373,14 +372,18 @@ A = M
 M = D
 @0
 M = M+1
-@0
-M=M-1
-A=M
+@SP
+AM=M-1
 D=M
-A=A-1
-M=D|M
-@0
-A=M-1
-M=!M
+@SP
+AM=M-1
+D=D|M
+M=D
+@SP
+M=M+1
+@SP
+AM=M-1
+D=!M
+M=D
 @SP
 M=M+1

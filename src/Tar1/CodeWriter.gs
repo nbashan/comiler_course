@@ -60,7 +60,8 @@ public class CodeWriter {
       asmCommand = asmCommand.replace("area", area)
     }
     if(command_splitted[1] == "temp"){
-      number = "${number.toInt() + 5}"
+      var num = Integer.parseInt(number) + 5
+      number = "${num}"
     }
     if(command_splitted[1] == "static") {
       number = Tools.inputFile + '.' +  number

@@ -1,1 +1,1 @@
-Main.translateVmFile("src/files/StackTest.vm","src/files/StackTest.asm")
+Main.translateVmFile("src/files/BasicTest.vm","src/files/BasicTest.asm")
