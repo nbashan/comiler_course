@@ -4,8 +4,8 @@ class Tools {
   public static var _inputFile: String as inputFile = ""
   public static var _pointer : HashMap as pointer =
       {
-          "0"->"This",
-          "1"->"That"
+          "0"->"THIS",
+          "1"->"THAT"
       }
 
 
@@ -145,7 +145,7 @@ class Tools {
               "M = M+1\n",
           //there is no pop constant
 
-          "push static" -> "@({number})\n" + //same for this, that, and static
+          "push static" -> "@{number}\n" + //same for this, that, and static
               "D = M\n" +
               //CommonGround: (push D)
               "@0\n" +
@@ -164,7 +164,7 @@ class Tools {
 
 
 
-          "push temp" -> "@({number})\n" + // when should we calculate this??
+          "push temp" -> "@{number}\n" + // when should we calculate this??
               "D = M\n" +
               //CommonGround: (push D)
               "@0\n" +
@@ -185,7 +185,7 @@ class Tools {
           "push segment" -> "@{area}\n" +
               "D=M\n" +
               "@{number}\n" +
-              "A=D+M\n" +
+              "A=D+A\n" +
               "D=M\n" +
               //CommonGround: (push D)
               "@0\n" +
@@ -202,6 +202,7 @@ class Tools {
 
               "@0\n" + // A=0
               "M=M-1\n" + // SP=SP-1
+              "A=M\n" + //
               "A=M\n" + // A=STACK[SP]
 
               //now we swithch between A and D
@@ -231,7 +232,6 @@ class Tools {
           "local"->'LCL',
           "argument"->'ARG',
           "this"->'THIS',
-          "that"->'THAT',
-          "temp"->'5'
+          "that"->'THAT'
       }
 }

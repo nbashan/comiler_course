@@ -57,14 +57,15 @@ public class CodeWriter {
     if(area != null){
       short_command = command_splitted[0] + " segment"
       asmCommand= Tools.push_pop[short_command] as String
-      asmCommand = asmCommand.replace("area", area)
+      asmCommand = asmCommand.replace("{area}", area)
     }
     if(command_splitted[1] == "temp"){
       var num = Integer.parseInt(number) + 5
       number = "${num}"
     }
     if(command_splitted[1] == "static") {
-      number = Tools.inputFile + '.' +  number
+      var file_list =Tools.inputFile.split('\\\\')
+      number = file_list[file_list.length-1] + '.' +  number
     }
 
     asmCommand = asmCommand.replace("{number}", number)
