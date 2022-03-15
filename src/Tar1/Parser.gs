@@ -36,15 +36,18 @@ public class Parser {
     return  curerent_command
   }
 
-  public function getCommandType(): Constants.CommandType{
+  public function getCommandType(): Tools.CommandType{
     var commandType = getCommand().split(" ")[0]
-    if(Tools.arithmetic[commandType] != null){
-      return C_ARITHMETIC
+    if(Tools.no_parameters[commandType] != null){
+      return C_NO_PARAMETERS
     }
-    if(commandType == "push" or commandType == "pop"){
-      return C_PUSH_POP
+    if(Tools.one_parameter[commandType] != null){
+      return C_ONE_PAREMETER
     }
-    return null
+    if(Tools.two_parameter[commandType] != null){
+      return C_TWO_PATAMETERS
+    }
+    return C_PUSH_POP
   }
 
   //returns the first argument of the current command
