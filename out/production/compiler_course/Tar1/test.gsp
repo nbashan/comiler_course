@@ -1,1 +1,2 @@
-Main.translateVmFile("src/files/BasicLoop.vm","src/files/BasicLoop.asm")
+Main.translateVmFile("sources_for_assignment_1\\nand2tetris\\projects\\08\\FunctionCalls\\NestedCall\\Sys.vm",
+    "sources_for_assignment_1\\nand2tetris\\projects\\08\\FunctionCalls\\NestedCall\\NestedCall.asm")

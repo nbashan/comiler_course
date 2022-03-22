@@ -232,7 +232,7 @@ class Tools {
                   "M=M+1\n"+
                   "@ f.Loop\n"+
                   "D=D-1;JNE\n"+
-                  "(f.End) //\n",
+                  "(f.End)\n",
 
 
           "call" ->

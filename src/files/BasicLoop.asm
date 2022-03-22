@@ -17,7 +17,7 @@ A=A+D
 D=A-D
 A=A-D
 M=D
-(src/files/BasicLoop.LOOP_START)
+(BasicLoop.LOOP_START)
 @ARG
 D=M
 @0
@@ -111,7 +111,7 @@ M = M+1
 M=M-1
 A=M			
 D=M
-@src/files/BasicLoop.LOOP_START
+@BasicLoop.LOOP_START
 D;JNE
 @LCL
 D=M
