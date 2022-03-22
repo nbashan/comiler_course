@@ -15,12 +15,19 @@ public class Main {
     while(parser.advance()){
       var commandType = parser.getCommandType()
       switch (commandType){
-        case C_ARITHMETIC:
-          codeWriter.writeArithmetic(parser.getCommand())
+        case C_NO_PARAMETERS:
+          codeWriter.writeNoParameters(parser.getCommand())
+          break
+        case C_ONE_PAREMETER:
+          codeWriter.writeOneParameter(parser.getCommand())
+          break
+        case C_TWO_PATAMETERS:
+          codeWriter.writeTwoParameters(parser.getCommand())
           break
         case C_PUSH_POP:
           codeWriter.writePushPop(parser.getCommand())
-          break
+          default:
+
       }
     }
     parser.closeFile()

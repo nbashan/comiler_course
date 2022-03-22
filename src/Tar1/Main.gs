@@ -25,7 +25,9 @@ public class Main {
           codeWriter.writeTwoParameters(parser.getCommand())
           break
         case C_PUSH_POP:
-          codeWriter.writeTwoParameters(parser.getCommand())
+          codeWriter.writePushPop(parser.getCommand())
+          default:
+
       }
     }
     parser.closeFile()

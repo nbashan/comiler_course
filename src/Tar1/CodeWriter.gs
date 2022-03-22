@@ -43,11 +43,11 @@ public class CodeWriter {
     var label = command_splitted[1]
 
     var asmCommand= Tools.one_parameter[command_splitted[0]] as String
-    asmCommand.replace("label", label)
+    asmCommand = asmCommand.replace("label", label)
 
     //@TODO
     var file_list =Tools.inputFile.split('\\\\')
-    asmCommand.replace("FileName",file_list[file_list.length-1])
+    asmCommand = asmCommand.replace("FileName",file_list[file_list.length-1])
 
     writer.write(asmCommand)
   }
@@ -63,8 +63,8 @@ public class CodeWriter {
     if(commandName == "call"){
       secondArgument = "${Integer.parseInt(secondArgument) - 5}"
     }
-    asmCommand.replace("firstParameter",firstArgument)
-    asmCommand.replace("secondParameter",secondArgument)
+    asmCommand = asmCommand.replace("firstParameter",firstArgument)
+    asmCommand = asmCommand.replace("secondParameter",secondArgument)
     writer.write(asmCommand)
   }
 

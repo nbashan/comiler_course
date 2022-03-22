@@ -174,8 +174,8 @@ class Tools {
                   "M=M-1\n"+
                   "A=M\n"+
                   "D=M\n"+
-                  "@T\n"+
-
+                  "@THIS\n"+
+                  "M=D\n"+
                    // ARG = *(FRAM-3)
                   "@LCL\n"+
                   "M=M-1\n"+
@@ -199,7 +199,7 @@ class Tools {
 
   public static var _one_parameter : HashMap as  one_parameter =
       {
-          "label" -> "(FileName.label)",
+          "label" -> "(FileName.label)\n",
 
           "if-goto" ->
               "@SP\n"+

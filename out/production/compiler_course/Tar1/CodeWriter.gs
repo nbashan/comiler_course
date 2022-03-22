@@ -19,8 +19,8 @@ public class CodeWriter {
 
   //writes to the output file the assembyly code that implements
   //the given command
-  public function writeArithmetic(command: String){
-    var commandAsm = Tools.arithmetic[command] as String
+  public function writeNoParameters(command: String){
+    var commandAsm = Tools.no_parameters[command] as String
     switch (command){
       case "eq":
         commandAsm = commandAsm.replace('{index}', "${eqCounter}")
@@ -36,6 +36,36 @@ public class CodeWriter {
         break
     }
     writer.write(commandAsm)
+  }
+
+  public function writeOneParameter(command: String){
+    var command_splitted = command.split(' ')
+    var label = command_splitted[1]
+
+    var asmCommand= Tools.one_parameter[command_splitted[0]] as String
+    asmCommand = asmCommand.replace("label", label)
+
+    //@TODO
+    var file_list =Tools.inputFile.split('\\\\')
+    asmCommand = asmCommand.replace("FileName",file_list[file_list.length-1])
+
+    writer.write(asmCommand)
+  }
+
+  public function writeTwoParameters(command: String){
+    var command_splitted = command.split(' ')
+    var commandName = command_splitted[0]
+
+    var asmCommand = Tools.two_parameter[commandName] as String
+    var firstArgument =command_splitted[1]
+    var secondArgument = command_splitted[2]
+
+    if(commandName == "call"){
+      secondArgument = "${Integer.parseInt(secondArgument) - 5}"
+    }
+    asmCommand = asmCommand.replace("firstParameter",firstArgument)
+    asmCommand = asmCommand.replace("secondParameter",secondArgument)
+    writer.write(asmCommand)
   }
 
   //writes to the output file the assembly code
