@@ -10,6 +10,7 @@ public class CodeWriter {
   public static var _eqCounter:int as eqCounter = 0
   public static var _gtICounter:int as gtCounter = 0
   public static var _ltCounter:int as ltCounter = 0
+  public static var _callCounter:int as callCounter = 0
 
   //opens the output file and gets ready to write into it
   public construct(outputFile: String){
@@ -20,8 +21,9 @@ public class CodeWriter {
   //writes to the output file the assembyly code that implements
   //the given command
   public function writeNoParameters(command: String){
-    var commandAsm = Tools.no_parameters[command] as String
-    switch (command){
+    var command_splitted = command.split(' ')
+    var commandAsm = Tools.no_parameters[command_splitted[0]] as String
+    switch (command_splitted[0]){
       case "eq":
         commandAsm = commandAsm.replace('{index}', "${eqCounter}")
         eqCounter += 1
@@ -61,7 +63,10 @@ public class CodeWriter {
     var secondArgument = command_splitted[2]
 
     if(commandName == "call"){
-      secondArgument = "${Integer.parseInt(secondArgument) - 5}"
+      secondArgument = "${Integer.parseInt(secondArgument) + 5}"
+      asmCommand = asmCommand.replace('{index}', "${callCounter}")
+      callCounter += 1
+
     }
     asmCommand = asmCommand.replace("firstParameter",firstArgument)
     asmCommand = asmCommand.replace("secondParameter",secondArgument)

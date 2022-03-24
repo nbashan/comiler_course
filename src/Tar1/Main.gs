@@ -17,8 +17,12 @@ public class Main {
     var file_list = d.list()
     var codeWriter = new CodeWriter(outputFile)
 
+    codeWriter.writer.write(Tools.bootStrap)
     foreach(inputFile in file_list) {
-      var parser = new Parser(inputFile)
+      var file_name = inputFile.split("\\.")
+
+      if(file_name[1] == "vm"){
+      var parser = new Parser(path+"\\"+inputFile)
       while (parser.advance()) {
         var commandType = parser.getCommandType()
         switch (commandType) {
@@ -39,6 +43,7 @@ public class Main {
       }
       parser.closeFile()
     }
+      }
     codeWriter.closeFile()
   }
 }

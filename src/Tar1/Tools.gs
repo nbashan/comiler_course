@@ -222,22 +222,22 @@ class Tools {
               "(firstParameter)\n"+
                   "@secondParameter\n"+
                   "D=A\n"+
-                  "@ f.End\n"+
+                  "@ firstParameter.End\n"+
                   "D; JEQ\n"+
-                  "(f.Loop)\n"+
+                  "(firstParameter.Loop)\n"+
                   "@SP \n"+
                   "A=M\n"+
                   "M=0\n"+
                   "@SP\n"+
                   "M=M+1\n"+
-                  "@ f.Loop\n"+
+                  "@firstParameter.Loop\n"+
                   "D=D-1;JNE\n"+
-                  "(f.End)\n",
+                  "(firstParameter.End)\n",
 
 
           "call" ->
               // push return-address
-              "@firstParameter.ReturnAddress\n"+
+              "@firstParameter.ReturnAddress.{index}\n"+
                   "D=A\n"+
                   "@SP\n"+
                   "A=M\n"+
@@ -280,7 +280,7 @@ class Tools {
                   // ARG = SP-n-5
                   "@SP\n"+
                   "D=M\n"+
-                  "secondParameter\n"+
+                  "@secondParameter\n"+
                   "D=D-A\n"+
                   "@ARG\n"+
                   "M=D\n"+
@@ -293,7 +293,7 @@ class Tools {
                   "@firstParameter\n"+
                   "0; JMP\n"+
                   // label return-address
-                  "(firstParameter.ReturnAddress)\n"
+                  "(firstParameter.ReturnAddress.{index})\n"
       }
 
           public static var _push_pop : HashMap as push_pop =
@@ -398,4 +398,59 @@ class Tools {
           "this"->'THIS',
           "that"->'THAT'
       }
+
+  public static var _bootStrap: String as bootStrap =
+  "@256\n"+
+  "D=A\n"+
+  "@SP\n"+
+  "M=D\n"+
+  "@Sys.init.returnAdd\n"+
+  "D=A\n"+
+  "@SP\n"+
+  "A=M\n"+
+  "M=D\n"+
+  "@SP\n"+
+  "M=M+1\n"+
+  "@LCL\n"+
+  "D=M\n"+
+  "@SP\n"+
+  "A=M\n"+
+  "M=D\n"+
+  "@SP\n"+
+  "M=M+1\n"+
+  "@ARG\n"+
+  "D=M\n"+
+  "@SP\n"+
+  "A=M\n"+
+  "M=D\n"+
+  "@SP\n"+
+  "M=M+1\n"+
+  "@THIS\n"+
+  "D=M\n"+
+  "@SP\n"+
+  "A=M\n"+
+  "M=D\n"+
+  "@SP\n"+
+  "M=M+1\n"+
+  "@THAT\n"+
+  "D=M\n"+
+  "@SP\n"+
+  "A=M\n"+
+  "M=D\n"+
+  "@SP\n"+
+  "M=M+1\n"+
+  "@SP\n"+
+  "D=M\n"+
+  "@5\n"+
+  "D=D-A\n"+
+  "@ARG\n"+
+  "M=D\n"+
+  "@SP\n"+
+  "D=M\n"+
+  "@LCL\n"+
+  "M=D\n"+
+  "@Sys.init\n"+
+  "0;JMP\n"+
+  "(Sys.init.returnAdd)\n"
+
 }
