@@ -14,10 +14,11 @@ public class Main {
   public static function translateVmFile(path: String, outputFile: String){
 
     var d = new File(path)
-    var file_list = d.list()
+    var file_list = Arrays.asList(d.list())
     var codeWriter = new CodeWriter(outputFile)
 
-    codeWriter.writer.write(Tools.bootStrap)
+    if (file_list.contains("Sys.vm"))
+      codeWriter.writer.write(Tools.bootStrap)
     foreach(inputFile in file_list) {
       var file_name = inputFile.split("\\.")
 
