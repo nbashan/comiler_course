@@ -17,7 +17,8 @@ public class Main {
     var file_list = Arrays.asList(d.list())
     var codeWriter = new CodeWriter(outputFile)
 
-    if (file_list.contains("Sys.vm")) codeWriter.writer.write(Tools.bootStrap)
+    if (file_list.contains("Sys.vm"))
+      codeWriter.writer.write(Tools.bootStrap)
     foreach(inputFile in file_list) {
       var file_name = inputFile.split("\\.")
 

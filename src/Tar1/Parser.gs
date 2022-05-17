@@ -17,6 +17,7 @@ public class Parser {
   public construct(inputFile :String){
     var file_read=new FileReader(inputFile)
     reader=new BufferedReader(file_read)
+    print(reader)
     Tools.inputFile = inputFile.split("\\.")[0]
   }
 
