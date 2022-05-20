@@ -11,11 +11,11 @@ public class Main {
 
   // Program Structure ////
 
-  public static function parserClass(path: String, outputFile: String){
+  public static function parserClass(path: String){
 
     var d = new File(path)
     var file_list = Arrays.asList(d.list())
-    codeWriter = new CodeWriter(outputFile)
+
 
 
     foreach(inputFile in file_list) {
@@ -23,6 +23,7 @@ public class Main {
 
       if(file_name[1] == "jack"){
         parser = new Parser(path+"\\"+inputFile)
+        codeWriter = new CodeWriter(path+"\\"+file_name[0])
 
         codeWriter.writeTag("class", true)
         parser.advance()
@@ -312,6 +313,8 @@ public class Main {
     codeWriter.writeTag("letStatement", false)
   }
 
+
+
   public static function ParseIfStatement(){
     codeWriter.writeTag("ifStatement", true)
 
@@ -422,6 +425,8 @@ public class Main {
     codeWriter.writeTag("doStatement", false)
   }
 
+
+
   public static function ParseReturnStatement(){
 
     codeWriter.writeTag("returnStatement", true)
@@ -445,6 +450,11 @@ public class Main {
 
  // Expressions ////
 
+  private static function ParseExpression() : void {
+  }
+
+  private static function ParseSubroutineCall() : void {
+  }
 
 }
 

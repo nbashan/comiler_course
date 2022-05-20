@@ -8,6 +8,7 @@ uses java.io.FileWriter
 //generates assembly code from the parsed VM command
 public class CodeWriter {
   public var _writer: BufferedWriter as writer
+  public var _writerT: BufferedWriter as writerT
 
   public static var _eqCounter:int as eqCounter = 0
   public static var _gtICounter:int as gtCounter = 0
@@ -16,8 +17,13 @@ public class CodeWriter {
 
   //opens the output file and gets ready to write into it
   public construct(outputFile: String){
-    var file_write = new FileWriter(outputFile)
-    writer = new BufferedWriter(file_write)
+    var class_write = new FileWriter(outputFile+".xml")
+    var tokens_write = new FileWriter(outputFile+"T.xml")
+    writer = new BufferedWriter(class_write)
+    writerT = new BufferedWriter(tokens_write)
+
+    writerT.write("<tokens>")
+    writerT.newLine()
   }
 
 
@@ -31,6 +37,7 @@ public class CodeWriter {
       fullTag = "</"+tag+">"
 
     writer.write(fullTag)
+    writer.newLine()
   }
 
   public function writeToken(token: String, type: String){
@@ -39,9 +46,17 @@ public class CodeWriter {
 
 
     writer.write(fullToken)
+    writer.newLine()
+
+    writerT.write(fullToken)
+    writerT.newLine()
   }
 
   function closeFile() : void {
+
     writer.close()
+
+    writerT.write("</tokens>")
+    writerT.close()
   }
 }
