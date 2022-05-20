@@ -8,6 +8,9 @@ public class Main {
   public static var codeWriter: CodeWriter
   public static var command: String
 
+
+  // Program Structure ////
+
   public static function parserClass(path: String, outputFile: String){
 
     var d = new File(path)
@@ -22,29 +25,31 @@ public class Main {
         parser = new Parser(path+"\\"+inputFile)
 
         codeWriter.writeTag("class", true)
-
-        //<keyword> class </keyword>
         parser.advance()
+
+
+        // class
         command = parser.getToken()
         codeWriter.writeToken(command,"keyword")
-
-        //<identifier> Square </identifier>
         parser.advance()
+
+        // className
         command = parser.getToken()
         codeWriter.writeToken(command, "identifier")
-
-        //<symbol> { </symbol>
         parser.advance()
+
+        // {
         command = parser.getToken()
         codeWriter.writeToken(command, "symbol")
-
-
-       // ParseClassVarDec()
-
-       // ParseSubDec()
-
-        //<symbol> } </symbol>
         parser.advance()
+
+        while (parser.getToken() =="static" || parser.getToken() =="field")
+            ParseClassVarDec()
+
+        while (parser.getToken() =="constructor" || parser.getToken() =="function" || parser.getToken() =="method")
+            ParseSubDec()
+
+        // }
         command = parser.getToken()
         codeWriter.writeToken(command, "symbol")
 
@@ -52,180 +57,184 @@ public class Main {
 
         parser.closeFile()
 
-
-
-
       }
     }
     codeWriter.closeFile()
   }
-  public static function ParseReturnStatement(){
 
-    codeWriter.writeTag("returnStatement", true)
+  public static function ParseClassVarDec(){
+    codeWriter.writeTag("classVarDec", true)
 
+    // static | field
     command = parser.getToken()
-    codeWriter.writeToken(command, "keyWord")
+    codeWriter.writeToken(command,"keyword")
     parser.advance()
 
-    if (parser.getToken()!=";")
-      ParseExpression()
-
+    // type -could be an identifier
     command = parser.getToken()
-    codeWriter.writeToken(command, "symbol")
+    codeWriter.writeToken(command,Parser.findType(command))
     parser.advance()
 
-
-    codeWriter.writeTag("returnStatement", false)
-  }
-
-  public static function ParseDoStatement(){
-    codeWriter.writeTag("doStatement", true)
-
+    // varName
     command = parser.getToken()
-    codeWriter.writeToken(command, "keyWord")
-    parser.advance()
-
-    ParseSubroutineCall()
-
-    command = parser.getToken()
-    codeWriter.writeToken(command, "symbol")
+    codeWriter.writeToken(command,"identifier")
     parser.advance()
 
 
-    codeWriter.writeTag("doStatement", false)
-  }
-
-  public static function ParseWhileStatement(){
-    codeWriter.writeTag("whileStatement", true)
-
-    command = parser.getToken()
-    codeWriter.writeToken(command, "keyWord")
-    parser.advance()
-
-    command = parser.getToken()
-    codeWriter.writeToken(command, "symbol")
-    parser.advance()
-
-    ParseExpression()
-
-    command = parser.getToken()
-    codeWriter.writeToken(command, "symbol")
-    parser.advance()
-
-    command = parser.getToken()
-    codeWriter.writeToken(command, "symbol")
-    parser.advance()
-
-    ParseStatements()
-
-    command = parser.getToken()
-    codeWriter.writeToken(command, "symbol")
-    parser.advance()
-
-
-    codeWriter.writeTag("whileStatement", false)
-  }
-
-  public static function ParseIFStatement(){
-    codeWriter.writeTag("ifStatement", true)
-
-    command = parser.getToken()
-    codeWriter.writeToken(command, "keyWord")
-    parser.advance()
-
-    command = parser.getToken()
-    codeWriter.writeToken(command, "symbol")
-    parser.advance()
-
-    ParseExpression()
-
-    command = parser.getToken()
-    codeWriter.writeToken(command, "symbol")
-    parser.advance()
-
-    command = parser.getToken()
-    codeWriter.writeToken(command, "symbol")
-    parser.advance()
-
-    ParseStatements()
-
-    command = parser.getToken()
-    codeWriter.writeToken(command, "symbol")
-    parser.advance()
-
-    if (parser.getToken()=="else"){
+    while (parser.getToken() ==",") {
+      // ,
       command = parser.getToken()
       codeWriter.writeToken(command, "symbol")
       parser.advance()
 
-      ParseStatements()
-
+      // varName
       command = parser.getToken()
-      codeWriter.writeToken(command, "symbol")
+      codeWriter.writeToken(command, "identifier")
       parser.advance()
     }
 
-
-    codeWriter.writeTag("ifStatement", false)
-  }
-
-  public static function ParseLetStatement(){
-    codeWriter.writeTag("letStatement", true)
-
+    // ;
     command = parser.getToken()
-    codeWriter.writeToken(command, "keyWord")
+    codeWriter.writeToken(command, "symbol")
     parser.advance()
 
+    codeWriter.writeTag("classVarDec", false)
+  }
+
+  private static function ParseSubDec() {
+    codeWriter.writeTag("subroutineDec", true)
+
+    // consructor | function | method
+    command = parser.getToken()
+    codeWriter.writeToken(command, "keyword")
+    parser.advance()
+
+    // void | type -could be a keyword or an identifier
+    command = parser.getToken()
+    codeWriter.writeToken(command,Parser.findType(command))
+    parser.advance()
+
+    // subroutineName
     command = parser.getToken()
     codeWriter.writeToken(command, "identifier")
     parser.advance()
 
-    if (parser.getToken() == "["){
+    // (
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
 
+    if  (parser.getToken() != ")")
+      ParseParameterList()
+
+    // )
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+
+    ParseSubBody()
+
+    codeWriter.writeTag("subroutineDec", false)
+  }
+
+  private static function ParseParameterList() : void {
+
+    codeWriter.writeTag("parameterList", true)
+
+    // type -could be a keyword or an identifier
+    command = parser.getToken()
+    codeWriter.writeToken(command,Parser.findType(command))
+    parser.advance()
+
+    // varName
+    command = parser.getToken()
+    codeWriter.writeToken(command, "identifier")
+    parser.advance()
+
+    while (parser.getToken() ==",") {
+      // ,
       command = parser.getToken()
       codeWriter.writeToken(command, "symbol")
       parser.advance()
 
-      ParseExpression()
-
+      // type -could be a keyword or an identifier
       command = parser.getToken()
-      codeWriter.writeToken(command, "symbol")
+      codeWriter.writeToken(command,Parser.findType(command))
       parser.advance()
 
-
+      // varName
+      command = parser.getToken()
+      codeWriter.writeToken(command, "identifier")
+      parser.advance()
     }
 
+    codeWriter.writeTag("parameterList", false)
+
+  }
+
+  private static function ParseSubBody() : void {
+
+    codeWriter.writeTag("subroutineBody", true)
+
+    // {
     command = parser.getToken()
     codeWriter.writeToken(command, "symbol")
     parser.advance()
 
-    ParseExpression()
+    while (parser.getToken() =="var")
+      ParseVarDec()
 
+    ParseStatements()
+
+    // {
     command = parser.getToken()
     codeWriter.writeToken(command, "symbol")
     parser.advance()
 
-
-    codeWriter.writeTag("letStatement", false)
+    codeWriter.writeTag("subroutineBody", false)
   }
 
-  public static function ParseStatement(){
-    codeWriter.writeTag("statement", true)
+  private static function ParseVarDec() : void {
+    codeWriter.writeTag("varDec", true)
 
+    // var
     command = parser.getToken()
-    if (command == "let")
-      ParseLetStatement()
-    if (command == "if")
-      ParseIFStatement()
-    if (command == "while")
-      ParseWhileStatement()
-    if (command == "do")
-      ParseDoStatement()
-    if (command == "return")
-      ParseReturnStatement()
+    codeWriter.writeToken(command, "keyword")
+    parser.advance()
 
-    codeWriter.writeTag("statement", false)
+    // type -could be a keyword or an identifier
+    command = parser.getToken()
+    codeWriter.writeToken(command,Parser.findType(command))
+    parser.advance()
+
+    // varName
+    command = parser.getToken()
+    codeWriter.writeToken(command,"identifier")
+    parser.advance()
+
+    while (parser.getToken() ==",") {
+      // ,
+      command = parser.getToken()
+      codeWriter.writeToken(command, "symbol")
+      parser.advance()
+
+      // varName
+      command = parser.getToken()
+      codeWriter.writeToken(command, "identifier")
+      parser.advance()
+    }
+
+    // ;
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+    codeWriter.writeTag("varDec", false)
   }
+
+
+  // Statements ////
 
   public static function ParseStatements(){
     codeWriter.writeTag("statements", true)
@@ -238,6 +247,203 @@ public class Main {
     codeWriter.writeTag("statements", false)
   }
 
+  public static function ParseStatement(){
+    codeWriter.writeTag("statement", true)
+
+    command = parser.getToken()
+    if (command == "let")
+      ParseLetStatement()
+    if (command == "if")
+      ParseIfStatement()
+    if (command == "while")
+      ParseWhileStatement()
+    if (command == "do")
+      ParseDoStatement()
+    if (command == "return")
+      ParseReturnStatement()
+
+    codeWriter.writeTag("statement", false)
+  }
+
+  public static function ParseLetStatement(){
+    codeWriter.writeTag("letStatement", true)
+
+    // let
+    command = parser.getToken()
+    codeWriter.writeToken(command, "keyWord")
+    parser.advance()
+
+    // varName
+    command = parser.getToken()
+    codeWriter.writeToken(command, "identifier")
+    parser.advance()
+
+    if (parser.getToken() == "["){
+
+      // [
+      command = parser.getToken()
+      codeWriter.writeToken(command, "symbol")
+      parser.advance()
+
+      ParseExpression()
+
+      // ]
+      command = parser.getToken()
+      codeWriter.writeToken(command, "symbol")
+      parser.advance()
+
+
+    }
+
+    // =
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+    ParseExpression()
+
+
+    // ;
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+
+    codeWriter.writeTag("letStatement", false)
+  }
+
+  public static function ParseIfStatement(){
+    codeWriter.writeTag("ifStatement", true)
+
+    // if
+    command = parser.getToken()
+    codeWriter.writeToken(command, "keyWord")
+    parser.advance()
+
+    // (
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+    ParseExpression()
+
+    // )
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+    // {
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+    ParseStatements()
+
+    // }
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+    if (parser.getToken()=="else"){
+
+      // else
+      command = parser.getToken()
+      codeWriter.writeToken(command, "keyword")
+      parser.advance()
+
+      // {
+      command = parser.getToken()
+      codeWriter.writeToken(command, "symbol")
+      parser.advance()
+
+      ParseStatements()
+
+      // }
+      command = parser.getToken()
+      codeWriter.writeToken(command, "symbol")
+      parser.advance()
+    }
+
+
+    codeWriter.writeTag("ifStatement", false)
+  }
+
+  public static function ParseWhileStatement(){
+    codeWriter.writeTag("whileStatement", true)
+
+
+    // while
+    command = parser.getToken()
+    codeWriter.writeToken(command, "keyWord")
+    parser.advance()
+
+    // (
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+    ParseExpression()
+
+    // )
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+    // {
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+    ParseStatements()
+
+    // }
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+    codeWriter.writeTag("whileStatement", false)
+  }
+
+  public static function ParseDoStatement(){
+    codeWriter.writeTag("doStatement", true)
+
+    // do
+    command = parser.getToken()
+    codeWriter.writeToken(command, "keyWord")
+    parser.advance()
+
+    ParseSubroutineCall()
+
+    // ;
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+    codeWriter.writeTag("doStatement", false)
+  }
+
+  public static function ParseReturnStatement(){
+
+    codeWriter.writeTag("returnStatement", true)
+
+    // return
+    command = parser.getToken()
+    codeWriter.writeToken(command, "keyWord")
+    parser.advance()
+
+    if (parser.getToken()!=";")
+      ParseExpression()
+
+    // ;
+    command = parser.getToken()
+    codeWriter.writeToken(command, "symbol")
+    parser.advance()
+
+
+    codeWriter.writeTag("returnStatement", false)
+  }
+
+ // Expressions ////
 
 
 }
