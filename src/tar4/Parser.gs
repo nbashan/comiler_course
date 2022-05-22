@@ -98,7 +98,7 @@ public class Parser {
     if (Pattern.matches(intReg,command))
       return "integerConstant"
     if (Pattern.matches(strReg,command))
-      return "integerConstant"
+      return "stringConstant"
     return "identifier"
 
   }

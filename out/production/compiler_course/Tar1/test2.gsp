@@ -7,4 +7,4 @@ for (file in files_list) {
   Main.translateVmFile(file_name+".vm", file_name+".asm")
 }
 */
- print("a")
+print("a")

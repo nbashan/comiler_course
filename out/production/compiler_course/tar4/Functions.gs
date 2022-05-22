@@ -11,7 +11,7 @@ class Functions {
   public static function ParseSubroutineBody(){}
   public static function ParseVarDec(){}
 
-/*
+
 ParseClassVarDec()
     {
     while (CheckNextToken() contain 'static' or 'field')
@@ -30,5 +30,5 @@ ParseClassVarDec()
     }
     }
 
-}*/
+}
         }
