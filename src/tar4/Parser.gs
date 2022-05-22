@@ -92,7 +92,7 @@ public class Parser {
 
   static function findType(command : String) : String {
     if (Pattern.matches(keywordReg,command))
-       return "keyWord"
+       return "keyword"
     if (Pattern.matches(symbolReg,command))
       return "symbol"
     if (Pattern.matches(intReg,command))

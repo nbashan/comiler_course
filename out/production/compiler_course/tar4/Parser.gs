@@ -3,15 +3,9 @@ package tar4
 uses Tar1.Tools
 
 uses java.io.BufferedReader
-uses java.io.File
 uses java.io.FileReader
-uses java.nio.charset.StandardCharsets
-uses java.nio.file.Files
 uses java.util.regex.Matcher
 uses java.util.regex.Pattern
-
-
-
 
 
 //Handles the parsing of a single .vm file
@@ -31,27 +25,20 @@ public class Parser {
       'let|do|if|else|while|return'
   private static var symbolReg = '[\\&\\*\\+\\(\\)\\.\\/\\,\\-\\]\\;\\~\\}\\|\\{\\>\\=\\[\\<]'
   private static var intReg = '[0-9]+'
-  private static var strReg = '"[^"]*"'
+  private static var strReg = '"[^"\n]*"'
   private static var idReg = '[a-zA-Z_][\\w]*'
-  private static var commentReg ="//[^\n]*\n|\\/\\*\\*"
+  private static var commentReg ="//|/\\*\\*|\\*/"
   private static var allReg = commentReg+'|'+symbolReg+'|'+intReg+'|'+strReg +'|'+idReg
-  private static var endComReg = "\\*\\/"
-  private static var endPat = Pattern.compile(endComReg)
-  private static var endmat:Matcher
   private static var regPattern:Pattern
-  var content:String
 
 
   //opens the input file/stream and gets ready to parse it
   public construct(inputFile :String){
-    content = new Scanner(new File(inputFile)).useDelimiter("\\Z").next().replace("\r\n","\n")
-    //var file_read=new FileReader(inputFile)
-    //reader=new BufferedReader(file_read)
+    var file_read=new FileReader(inputFile)
+    reader=new BufferedReader(file_read)
     regPattern =Pattern.compile(allReg)
-    //matched= regPattern.matcher(reader.readLine())
-    matched= regPattern.matcher(content)
+    matched= regPattern.matcher(reader.readLine())
     Tools.inputFile = inputFile.split("\\.")[0]
-    endmat = endPat.matcher(content)
 
   }
 
@@ -63,27 +50,35 @@ public class Parser {
   //Initialy there is no current command
   public function advance(): boolean{
     var found = matched.find()
-    //var a = matched.group()
-   // while (true){
-    while (!found || matched.group().startsWith("//")||matched.group().startsWith("/**")) {
-      if (!found)
-        return false
-      //a = matched.group()
-      if (matched.group().startsWith("/**")) {
-        endmat.find(matched.end())
-        found=matched.find(endmat.end())
+    while(!found|| matched.group()=="//" || matched.group()=="/**") {
+      if (!found|| matched.group()=="//") {
+        current_line = reader.readLine()
+        if (current_line == null)
+          return false
+        else
+          matched = regPattern.matcher(current_line)
       }
       else
-        found = matched.find()
-
-
+        endComment()
+      found = matched.find()
     }
-
-
     return true
 
+    //curerent_command = reader.readLine()
+    //return curerent_command != null
   }
-
+  private function endComment(){
+    var found = false
+    while (!found) {
+      while (!matched.find()) {
+        current_line = reader.readLine()
+        matched = regPattern.matcher(current_line)
+      }
+      if(matched.group()=="*/")
+        found = true
+    }
+    return
+  }
 
   public function getToken(): String {
     var token = matched.group();
@@ -92,18 +87,18 @@ public class Parser {
   }
 
   function closeFile() : void {
-    //reader.close()
+    reader.close()
   }
 
   static function findType(command : String) : String {
     if (Pattern.matches(keywordReg,command))
-       return "keyWord"
+       return "keyword"
     if (Pattern.matches(symbolReg,command))
       return "symbol"
     if (Pattern.matches(intReg,command))
       return "integerConstant"
     if (Pattern.matches(strReg,command))
-      return "integerConstant"
+      return "stringConstant"
     return "identifier"
 
   }

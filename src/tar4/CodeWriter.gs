@@ -42,7 +42,17 @@ public class CodeWriter {
 
   public function writeToken(token: String, type: String){
 
-    var fullToken = "<"+type+"> "+token+" </"+type+">"
+    var writeToken =token
+    if (token=="<")
+      writeToken="&lt;"
+    if (token==">")
+      writeToken="&gt;"
+    if (token=="\"")
+      writeToken="&qout;"
+    if (token=="&")
+      writeToken="&amp;"
+
+    var fullToken = "<"+type+"> "+writeToken+" </"+type+">"
 
 
     writer.write(fullToken)
