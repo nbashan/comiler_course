@@ -295,10 +295,10 @@ class CompilationEngine {
 
     if (parser.getToken() != ";")
     {
-      codeWriter.writePush(VMWriter.SEGMENT.CONST, 0)
+      CompileExpression()
     }
     else {
-      CompileExpression()
+      codeWriter.writePush(VMWriter.SEGMENT.CONST, 0)
     }
     codeWriter.writeReturn()
 
