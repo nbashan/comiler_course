@@ -1,7 +1,7 @@
 package Tar5
 
 class VMWriter {
-  public construct(){}
+  public construct(outputFile:String){}
   public function writePush(){}
   public function writePop(){}
   public function writeArithmetic(){}
