@@ -1,5 +1,7 @@
 package Tar5
 
+uses Tar1.CodeWriter
+
 //Gets its input from a JackTokenizer and writes its output using the VMWriter
 //Organized as a series of compilexxx routines, xxx being a syntactic element in the Jack language
 //Contract:
@@ -244,19 +246,71 @@ class CompilationEngine {
     }
   }
 
+  //nati
   public function CompileWhile() {
+    var continueLabel = newLabel()
+    var topLabel = newLabel()
+    codeWriter.writeLabel(topLabel)
+
+    // while
+    parser.advance()
+
+    // (
+    parser.advance()
+
+    CompileExpression()
+
+    // )
+    parser.advance()
+    codeWriter.writeArithmetic(VMWriter.COMMAND.NOT)
+    codeWriter.writeIf(continueLabel)
+
+    // {
+    parser.advance()
+
+    CompileStatements()
+
+    // }
+    parser.advance()
+    //if (condition) go to top label
+    codeWriter.writeGoto(topLabel)
+    //or continue
+    codeWriter.writeLabel(continueLabel)
 
   }
-
+  //nati
   public function CompileDo() {
+    // do
+    parser.advance()
 
+    CompileSubroutineCall()
+
+    // ;
+    parser.advance()
   }
-
+  //nati
   public function CompileReturn() {
+    // return
+    parser.advance()
 
+    if (parser.getToken() != ";")
+    {
+      codeWriter.writePush(VMWriter.SEGMENT.CONST, 0)
+    }
+    else {
+      CompileExpression()
+    }
+    codeWriter.writeReturn()
+
+    // ;
+    parser.advance()
   }
 
   public function CompileExpression() {
+  }
+
+  public function CompileSubroutineCall(){
+
   }
 
   public function CompileTerm() {
