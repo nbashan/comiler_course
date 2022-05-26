@@ -1,4 +1,3 @@
-uses gw.util.GosuStringUtil
 uses java.io.*
 
 

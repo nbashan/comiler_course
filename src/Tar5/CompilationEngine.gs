@@ -1,7 +1,5 @@
 package Tar5
 
-uses Tar1.CodeWriter
-
 //Gets its input from a JackTokenizer and writes its output using the VMWriter
 //Organized as a series of compilexxx routines, xxx being a syntactic element in the Jack language
 //Contract:
@@ -195,7 +193,7 @@ class CompilationEngine {
       flag = true
       // [
       parser.advance()
-      codeWriter.writePush(getKind(classTable.KindOf(name)), classTable.IndexOf(name))
+      codeWriter.writePush(getSegment(classTable.KindOf(name)), classTable.IndexOf(name))
       CompileExpression()
       codeWriter.writeArithmetic(VMWriter.COMMAND.ADD)
       // ]
@@ -214,7 +212,7 @@ class CompilationEngine {
       codeWriter.writePop(VMWriter.SEGMENT.THAT,0)
     }
     else {
-      codeWriter.writePop(getKind(classTable.KindOf(name)), classTable.IndexOf(name))
+      codeWriter.writePop(getSegment(classTable.KindOf(name)), classTable.IndexOf(name))
     }
     // ;
     parser.advance()
@@ -307,35 +305,259 @@ class CompilationEngine {
   }
 
   public function CompileExpression() {
+
+    CompileTerm()
+
+    while ("+-*/&|<>=".contains(parser.getToken())) {
+      var command =parser.getToken()
+      parser.advance()
+
+      CompileTerm()
+
+      codeWriter.writeArithmetic(getOp(command))
+    }
+
+
   }
 
   public function CompileSubroutineCall(){
+  // subroutineName | className | varName
+    name = parser.getToken()
+    parser.advance()
 
+    var nargs = 0
+    if (parser.getToken() == ".") {
+      //.
+      parser.advance()
+
+      //subroutineName
+      if (classTable.TypeOf(parser.getToken())=="") {  // method of another class
+        name = name + "." + parser.getToken()
+
+      }
+      else{ // method of an instance of another class
+        codeWriter.writePush(getSegment(classTable.KindOf(name)), classTable.IndexOf(name))
+        nargs += 1
+
+        name = classTable.TypeOf(name)+ "." + parser.getToken()
+      }
+      parser.advance()
+    }
+    else { // method of current class
+      codeWriter.writePush(VMWriter.SEGMENT.POINTER,0)
+      nargs =+ 1
+
+      name = currentClass+"."+name
+    }
+
+    //(
+    parser.advance()
+
+    nargs += CompileExpressionList()
+
+    codeWriter.writeCall(name,nargs)
+    //)
+    parser.advance()
   }
 
   public function CompileTerm() {
+    var command = parser.getToken()
+    var commandType = Tokenizer.findType(command)
+    if("-~".contains(command)){
+      parser.advance()
+      CompileTerm()
+
+      codeWriter.writeArithmetic(getUnOp(command))
+
+    }
+    else if(command == "("){
+      parser.advance()
+
+      CompileExpression()
+
+      //)
+      parser.advance()
+    }
+    else if(commandType == "integerConstant"){
+     codeWriter.writePush(VMWriter.SEGMENT.CONST, Integer.parseInt(command))
+      parser.advance()
+    }
+    else if(commandType == "stringConstant"){
+      var strCommand = command.substring(1, command.length() - 1)
+      codeWriter.writePush(VMWriter.SEGMENT.CONST, strCommand.length())
+      codeWriter.writeCall("String.new", 1)
+      for(c in strCommand.toCharArray()){
+        codeWriter.writePush(VMWriter.SEGMENT.CONST, c)
+        codeWriter.writeCall("String.appendChar",2)
+      }
+
+
+      parser.advance()
+    }
+    else if(commandType == "keyword"){
+      if (command=="true"){
+        codeWriter.writePush(VMWriter.SEGMENT.CONST, 0)
+        codeWriter.writeArithmetic(VMWriter.COMMAND.NOT)
+      }
+      else if (command=="this"){
+        codeWriter.writePush(VMWriter.SEGMENT.POINTER, 0)
+      }
+      else {  // command=="false" || command == "null"
+        codeWriter.writePush(VMWriter.SEGMENT.CONST,0)
+      }
+      parser.advance()
+    }
+    else { //varName | classname | subrutineName
+      var varName = parser.getToken()
+
+      parser.advance()
+      if (!".(".contains(parser.getToken())) { // just a varName and not a subroutineCall
+        codeWriter.writePush(getSegment(classTable.KindOf(varName)), classTable.IndexOf(varName))
+
+        if (parser.getToken() == "[") {
+          parser.advance()
+
+          CompileExpression()
+
+          //base+offset
+          codeWriter.writeArithmetic(VMWriter.COMMAND.ADD)
+
+          codeWriter.writePop(VMWriter.SEGMENT.POINTER, 1)
+          codeWriter.writePush(VMWriter.SEGMENT.THAT, 0)
+
+          //]
+          parser.advance()
+        }
+      }
+      else {
+        var nargs = 0
+        if (parser.getToken() == ".") {
+          //.
+          parser.advance()
+
+          //subroutineName
+          if (classTable.TypeOf(parser.getToken())=="") {  // method of another class
+            varName = varName + "." + parser.getToken()
+
+          }
+          else{ // method of an instance of another class
+            codeWriter.writePush(getSegment(classTable.KindOf(varName)), classTable.IndexOf(varName))
+            nargs += 1
+
+            varName = classTable.TypeOf(varName)+ "." + parser.getToken()
+          }
+          parser.advance()
+        }
+        else { // method of current class
+          codeWriter.writePush(VMWriter.SEGMENT.POINTER,0)
+          nargs =+ 1
+
+          varName = currentClass+"."+varName
+        }
+
+        //(
+        parser.advance()
+
+        nargs += CompileExpressionList()
+
+        codeWriter.writeCall(varName,nargs)
+        //)
+        parser.advance()
+
+      }
+    }
+
   }
 
-  public function CompileExpressionList() {
+  public function CompileExpressionList():int {
+    var nargs =0
+
+    if(parser.getToken() != ")") {
+
+      CompileExpression()
+
+      nargs+=1
+
+      while (parser.getToken() == ",") {
+        // ,
+        parser.advance()
+
+        CompileExpression()
+        nargs+=1
+      }
+    }
+
+    return nargs
   }
 
 
- public function getKind(_kind: Symbol.KIND):VMWriter.SEGMENT{
+  public function getSegment(_kind : Symbol.KIND): VMWriter.SEGMENT{
    var mySegment : VMWriter.SEGMENT
    switch (_kind){
      case Symbol.KIND.FIELD:
        mySegment = VMWriter.SEGMENT.THIS
+       break
      case Symbol.KIND.STATIC:
        mySegment = VMWriter.SEGMENT.STATIC
+       break
      case Symbol.KIND.VAR:
        mySegment = VMWriter.SEGMENT.LOCAL
+       break
      case Symbol.KIND.ARG:
        mySegment = VMWriter.SEGMENT.ARG
+       break
      default:
        mySegment = VMWriter.SEGMENT.NONE
    }
    return mySegment
  }
+
+  public function getOp(opSign: String):VMWriter.COMMAND{
+    var opCommand : VMWriter.COMMAND
+    switch (opSign){
+      case "+":
+        opCommand = VMWriter.COMMAND.ADD
+        break
+      case "-":
+        opCommand = VMWriter.COMMAND.SUB
+        break
+      case "*":
+        opCommand = VMWriter.COMMAND.MULT
+        break
+      case "/":
+        opCommand = VMWriter.COMMAND.DIV
+        break
+      case ">":
+        opCommand = VMWriter.COMMAND.GT
+        break
+      case "<":
+        opCommand = VMWriter.COMMAND.LT
+        break
+      case "=":
+        opCommand = VMWriter.COMMAND.EQ
+        break
+      case "&":
+        opCommand = VMWriter.COMMAND.AND
+        break
+      case "|":
+        opCommand = VMWriter.COMMAND.OR
+
+      }
+    return opCommand
+  }
+
+  public function getUnOp(opSign: String):VMWriter.COMMAND{
+    var opCommand : VMWriter.COMMAND
+    switch (opSign){
+      case "-":
+        opCommand = VMWriter.COMMAND.NEG
+        break
+      case "~":
+        opCommand = VMWriter.COMMAND.NOT
+
+    }
+    return opCommand
+  }
 
  public static function newLabel(): String{
    var  ret = "LABEL_" + (labelIndex)

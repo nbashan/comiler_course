@@ -6,13 +6,13 @@ uses java.io.FileWriter
 class VMWriter {
   public var _writer: BufferedWriter as writer
   static enum SEGMENT {CONST,ARG,LOCAL,STATIC,THIS,THAT,POINTER,TEMP,NONE}
-  static enum COMMAND {ADD,SUB,NEG,EQ,GT,LT,AND,OR,NOT}
+  static enum COMMAND {ADD,SUB,NEG,EQ,GT,LT,AND,OR,NOT,MULT,DIV}
 
   public construct(outputFile: String){
     var file_write = new FileWriter(outputFile)
     writer = new BufferedWriter(file_write)
   }
-  public static var segmentStringHashMap = {
+  public static var segmentStringHashMap:HashMap<SEGMENT,String> = {
       SEGMENT.CONST -> "constant",
       (SEGMENT.ARG)->"argument",
       (SEGMENT.LOCAL)->"local",
@@ -23,7 +23,7 @@ class VMWriter {
       (SEGMENT.TEMP)->"temp"
   }
 
-  public static var commandStringHashMap = {
+  public static var commandStringHashMap:HashMap<COMMAND,String> = {
       (COMMAND.ADD) -> "add",
       (COMMAND.SUB) -> "sub",
       (COMMAND.NEG) -> "neg",
@@ -32,7 +32,10 @@ class VMWriter {
       (COMMAND.LT) -> "lt",
       (COMMAND.AND) -> "and",
       (COMMAND.OR) -> "or",
-      (COMMAND.NOT) -> "not"
+      (COMMAND.NOT) -> "not",
+      (COMMAND.MULT)-> "call Math.multiply 2",
+      (COMMAND.DIV) -> "call Math.divide 2"
+
   }
 
   public function writePush(segment: SEGMENT, index: int){

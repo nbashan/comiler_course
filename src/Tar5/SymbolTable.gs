@@ -3,7 +3,7 @@ package Tar5
 class SymbolTable {
   public static var classTableMap: HashMap<String,Symbol>
   public static var subroutineTableMap: HashMap<String,Symbol>
-  public static var indicesMap = {
+  public static var indicesMap:HashMap<Symbol.KIND,int> = {
           Symbol.KIND.ARG-> 0,
           (Symbol.KIND.FIELD)-> 0,
           (Symbol.KIND.STATIC)-> 0,
