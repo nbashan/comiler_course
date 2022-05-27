@@ -19,11 +19,19 @@ class CompilationEngine {
   var type : String
   var kind : Symbol.KIND
   var currentClass : String
+  var currentFunction: String
+  var functionType: String
   public static var _labelIndex:int as labelIndex = 0
 
   public construct(inputFile : String, outputFile : String) {
     parser = new Tokenizer(inputFile)
     codeWriter = new VMWriter(outputFile)
+  }
+
+  public function close_engine(){
+    parser.closeFile()
+    codeWriter.closeFile()
+
   }
 
 
@@ -75,7 +83,8 @@ class CompilationEngine {
     classTable.startSubroutine()
 
     // consructor | function | method
-    if (parser.getToken() == "method") {
+    functionType = parser.getToken()
+    if (functionType== "method") {
       classTable.define("this", currentClass, Symbol.KIND.ARG)
     }
     parser.advance()
@@ -84,6 +93,7 @@ class CompilationEngine {
     parser.advance()
 
     // subroutineName
+    currentFunction = parser.getToken()
     parser.advance()
 
     // (
@@ -131,7 +141,19 @@ class CompilationEngine {
     while (parser.getToken() == "var")
       CompileVarDec()
 
-    CompileStatements()
+    codeWriter.writeFunction(currentClass+"."+currentFunction, classTable.VarCount(Symbol.KIND.VAR))
+    if (functionType == "method"){
+     codeWriter.writePush(VMWriter.SEGMENT.ARG, 0)
+      codeWriter.writePop(VMWriter.SEGMENT.POINTER,0)
+    }
+    else if (functionType == "constructor"){
+      codeWriter.writePush(VMWriter.SEGMENT.CONST, classTable.VarCount(Symbol.KIND.FIELD))
+      codeWriter.writeCall("Memory.alloc", 1)
+      codeWriter.writePop(VMWriter.SEGMENT.POINTER,0)
+    }
+
+
+      CompileStatements()
 
     // {
     parser.advance()
@@ -149,7 +171,6 @@ class CompilationEngine {
     name = parser.getToken()
     parser.advance()
     classTable.define(name, type, Symbol.KIND.VAR)
-
     while (parser.getToken() == ",") {
       // ,
       parser.advance()
@@ -182,7 +203,7 @@ class CompilationEngine {
   }
 
   public function CompileLet() {
-    var flag = false
+    var isArray = false
     // let
     parser.advance()
     // varName
@@ -190,7 +211,7 @@ class CompilationEngine {
     parser.advance()
 
     if (parser.getToken() == "[") {
-      flag = true
+      isArray = true
       // [
       parser.advance()
       codeWriter.writePush(getSegment(classTable.KindOf(name)), classTable.IndexOf(name))
@@ -205,7 +226,7 @@ class CompilationEngine {
     parser.advance()
     CompileExpression()
 
-    if(flag){
+    if(isArray){
       codeWriter.writePop(VMWriter.SEGMENT.TEMP, 0)
       codeWriter.writePop(VMWriter.SEGMENT.POINTER,1)
       codeWriter.writePush(VMWriter.SEGMENT.TEMP,0)
@@ -219,6 +240,10 @@ class CompilationEngine {
   }
 
   public function CompileIf() {
+    var trueLabel =newLabel()
+    var falseLabel =newLabel()
+    var endLabel =newLabel()
+
     // if
     parser.advance()
     // (
@@ -227,11 +252,18 @@ class CompilationEngine {
     // )
     parser.advance()
 
+    codeWriter.writeIf(trueLabel)
+    codeWriter.writeGoto(falseLabel)
+    codeWriter.writeLabel(trueLabel)
+
     // {
     parser.advance()
     CompileStatements()
     // }
     parser.advance()
+
+    codeWriter.writeGoto(endLabel)
+    codeWriter.writeLabel(falseLabel)
 
     if (parser.getToken() == "else") {
       // else
@@ -242,6 +274,8 @@ class CompilationEngine {
       // }
       parser.advance()
     }
+
+    codeWriter.writeLabel(endLabel)
   }
 
   //nati
@@ -285,6 +319,8 @@ class CompilationEngine {
 
     // ;
     parser.advance()
+
+    codeWriter.writePop(VMWriter.SEGMENT.TEMP,0)
   }
   //nati
   public function CompileReturn() {
@@ -331,7 +367,7 @@ class CompilationEngine {
       parser.advance()
 
       //subroutineName
-      if (classTable.TypeOf(parser.getToken())=="") {  // method of another class
+      if (classTable.TypeOf(name)=="") {  // method of another class
         name = name + "." + parser.getToken()
 
       }

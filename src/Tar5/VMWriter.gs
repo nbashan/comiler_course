@@ -40,31 +40,41 @@ class VMWriter {
 
   public function writePush(segment: SEGMENT, index: int){
     writer.write("push " +segmentStringHashMap[segment] +" "+ index as String)
+    writer.newLine()
   }
   public function writePop(segment: SEGMENT, index: int){
     writer.write("pop " +segmentStringHashMap[segment] +" "+ index as String)
+    writer.newLine()
   }
   public function writeArithmetic(command: COMMAND){
     writer.write(commandStringHashMap[command])
+    writer.newLine()
   }
   public function writeLabel(label: String){
     writer.write("label " + label)
+    writer.newLine()
   }
   public function writeGoto(label: String){
     writer.write("goto " + label)
+    writer.newLine()
   }
   public function writeIf(label: String){
     writer.write("if-goto " + label)
+    writer.newLine()
   }
   public function writeCall(name:String, nargs: int){
     writer.write("call " + name + " " + nargs as String)
+    writer.newLine()
   }
   public function writeFunction(name:String, nargs: int){
     writer.write("function " + name + " " + nargs as String)
+    writer.newLine()
   }
   public function writeReturn(){
     writer.write("return")
+    writer.newLine()
   }
+
   function closeFile() : void {
     writer.close()
   }
