@@ -37,26 +37,26 @@ class PlayerController {
 		let x = player.getX();
 		let y = player.getY();
 
-		while( ( (~(x = (xCount - 1) )) | (~(y = 0)) ) = true){
-			while((key < 130) | (key > 133)){
+		
+		while( ~((x = (xCount - 1)) & (y = 0))){ // didn't reach the target
+			while((key < 130) | (key > 133)){ //didn't click on one the arrows
 				let key = Keyboard.keyPressed();
 			}
 
-			if(key = 130){
+			if(key = 130){ //left
 				let direction = 8;
-				//left
-			}
-			if(key = 131){
+			}	
+			
+			if(key = 131){ //up
 				let direction = 1;
-				//up
-			}
-			if(key = 132){
+			}	
+			
+			if(key = 132){ //right
 				let direction = 4;
-				//right
-			}
-			if(key = 133){
+			}	
+			
+			if(key = 133){ //down
 				let direction = 2;
-				//down
 			}
 
 			if(canPlayerGo(direction)){
@@ -65,9 +65,9 @@ class PlayerController {
 				//first remove player from it current place
 				do Screen.setColor(false);
 				do Screen.drawRectangle(baseX + (x * blockWidth) + drawPadding, 
-					baseY + (y * blockHeight) + drawPadding,
-				 baseX + ((x+1) * blockWidth) - drawPadding,
-				  baseY + ((y+1) * blockHeight) - drawPadding );
+										baseY + (y * blockHeight) + drawPadding,
+										baseX + ((x+1) * blockWidth) - drawPadding,
+										baseY + ((y+1) * blockHeight) - drawPadding );
 
 				do player.go(direction);
 
@@ -75,9 +75,9 @@ class PlayerController {
 				let y = player.getY();	
 				do Screen.setColor(true);
 				do Screen.drawRectangle(baseX + (x * blockWidth) + drawPadding, 
-					baseY + (y * blockHeight) + drawPadding,
-				 baseX + ((x+1) * blockWidth) - drawPadding,
-				  baseY + ((y+1) * blockHeight) - drawPadding );
+										baseY + (y * blockHeight) + drawPadding,
+										baseX + ((x+1) * blockWidth) - drawPadding,
+										baseY + ((y+1) * blockHeight) - drawPadding );
 
 				}
 
@@ -89,10 +89,10 @@ class PlayerController {
 
 		return;
 	}
-	//let N = 1  north
-	//let S = 2  south
-	//let E = 4  east
-	//let W = 8  west
+	// up -1
+	// down -2
+	// right -4
+	// left- 8
 
 	method boolean canPlayerGo(int direction){
 		var int x, y, val;

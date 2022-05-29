@@ -1,136 +1,26 @@
-function Main.main 16
+function Main.main 14
 push constant 16
+pop local 2
+push constant 8
 pop local 3
 push constant 8
 pop local 4
 push constant 8
 pop local 5
-push constant 8
-pop local 6
 push constant 31
-pop local 7
+pop local 6
 push constant 30
-pop local 8
+pop local 7
 push constant 6
+pop local 8
+push constant 1
 pop local 9
-push constant 1
-pop local 0
-push local 0
-call PseudoRand.def 1
-pop local 10
-push constant 89
-pop local 15
-label WHILE_EXP0
-push local 15
-push constant 89
-eq
-not
-if-goto WHILE_END0
-push local 4
-call Array.new 1
-pop local 11
-push constant 0
-pop local 1
-label WHILE_EXP1
-push local 1
-push local 4
-lt
-not
-if-goto WHILE_END1
-push local 1
-push local 11
-add
-push local 3
-call Array.new 1
-pop temp 0
-pop pointer 1
-push temp 0
-pop that 0
-push constant 0
-pop local 2
-label WHILE_EXP2
-push local 2
-push local 3
-lt
-not
-if-goto WHILE_END2
-push local 1
-push local 11
-add
-pop pointer 1
-push that 0
-pop local 12
-push local 2
-push local 12
-add
-push constant 0
-pop temp 0
-pop pointer 1
-push temp 0
-pop that 0
-push local 2
-push constant 1
-add
-pop local 2
-goto WHILE_EXP2
-label WHILE_END2
-push local 1
-push constant 1
-add
-pop local 1
-goto WHILE_EXP1
-label WHILE_END1
-push local 11
-push local 10
-push local 3
-push local 4
-call MazeGenerator.generate 4
-pop temp 0
-push local 11
-push local 5
-push local 6
-push local 7
-push local 8
-push local 3
-push local 4
-call MazeDrawer.drawMaze 7
-pop temp 0
-push constant 0
-push constant 0
-call Player.new 2
-pop local 13
-push local 13
-push local 11
-push local 5
-push local 6
-push local 7
-push local 8
-push local 3
-push local 4
+label LABEL_1
 push local 9
-call PlayerController.new 9
-pop local 14
-push local 5
-push local 6
-push local 7
-push local 8
-push local 3
-push local 4
-push constant 8
-call Main.drawEndPoint 7
-pop temp 0
-push local 14
-call PlayerController.loop 1
-pop temp 0
-push constant 0
-call Screen.setColor 1
-pop temp 0
-push constant 0
-push constant 0
-push constant 511
-push constant 255
-call Screen.drawRectangle 4
-pop temp 0
+push constant 3
+lt
+not
+if-goto LABEL_0
 push constant 0
 not
 call Screen.setColor 1
@@ -139,58 +29,147 @@ push constant 11
 push constant 24
 call Output.moveCursor 2
 pop temp 0
-push constant 15
+push constant 6
 call String.new 1
-push constant 80
+push constant 108
+call String.appendChar 2
+push constant 101
+call String.appendChar 2
+push constant 118
+call String.appendChar 2
+push constant 101
 call String.appendChar 2
 push constant 108
 call String.appendChar 2
-push constant 97
-call String.appendChar 2
-push constant 121
-call String.appendChar 2
 push constant 32
-call String.appendChar 2
-push constant 65
-call String.appendChar 2
-push constant 103
-call String.appendChar 2
-push constant 97
-call String.appendChar 2
-push constant 105
-call String.appendChar 2
-push constant 110
-call String.appendChar 2
-push constant 63
-call String.appendChar 2
-push constant 32
-call String.appendChar 2
-push constant 89
-call String.appendChar 2
-push constant 47
-call String.appendChar 2
-push constant 78
 call String.appendChar 2
 call Output.printString 1
 pop temp 0
-call Keyboard.readChar 0
-pop local 15
-push local 15
-call Output.printChar 1
+push local 9
+call Output.printInt 1
 pop temp 0
-goto WHILE_EXP0
-label WHILE_END0
+push constant 3000
+call Sys.wait 1
+pop temp 0
+call Screen.clearScreen 0
+pop temp 0
+push local 3
+call Array.new 1
+pop local 10
+push constant 0
+pop local 0
+label LABEL_3
+push local 0
+push local 3
+lt
+not
+if-goto LABEL_2
+push local 10
+push local 0
+add
+push local 2
+call Array.new 1
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push constant 0
+pop local 1
+label LABEL_5
+push local 1
+push local 2
+lt
+not
+if-goto LABEL_4
+push local 10
+push local 0
+add
+pop pointer 1
+push that 0
+pop local 11
+push local 11
+push local 1
+add
+push constant 0
+pop temp 0
+pop pointer 1
+push temp 0
+pop that 0
+push local 1
+push constant 1
+add
+pop local 1
+goto LABEL_5
+label LABEL_4
+push local 0
+push constant 1
+add
+pop local 0
+goto LABEL_3
+label LABEL_2
+push local 10
+push local 9
+call MazeGenerator.generate 2
+pop temp 0
+push local 10
+push local 4
+push local 5
+push local 6
+push local 7
+push local 2
+push local 3
+call MazeDrawer.drawMaze 7
+pop temp 0
+push constant 0
+push constant 0
+call Player.new 2
+pop local 12
+push local 12
+push local 10
+push local 4
+push local 5
+push local 6
+push local 7
+push local 2
+push local 3
+push local 8
+call PlayerController.new 9
+pop local 13
+push local 4
+push local 5
+push local 6
+push local 7
+push local 2
+push local 3
+push constant 8
+call Main.drawEndPoint 7
+pop temp 0
+push local 13
+call PlayerController.loop 1
+pop temp 0
+call Screen.clearScreen 0
+pop temp 0
+push local 9
+push constant 1
+add
+pop local 9
+goto LABEL_1
+label LABEL_0
+push constant 11
+push constant 24
+call Output.moveCursor 2
+pop temp 0
 push constant 7
 call String.new 1
 push constant 84
 call String.appendChar 2
-push constant 72
+push constant 104
 call String.appendChar 2
 push constant 101
 call String.appendChar 2
 push constant 32
 call String.appendChar 2
-push constant 101
+push constant 69
 call String.appendChar 2
 push constant 110
 call String.appendChar 2
@@ -224,35 +203,5 @@ add
 push argument 6
 call Screen.drawCircle 3
 pop temp 0
-push constant 0
-return
-function Main.getFirstKeyPressed 1
-push constant 0
-pop local 0
-label WHILE_EXP0
-push local 0
-push constant 0
-eq
-not
-if-goto WHILE_END0
-call Keyboard.keyPressed 0
-pop local 0
-goto WHILE_EXP0
-label WHILE_END0
-push local 0
-return
-function Main.playAgain 1
-push constant 0
-pop local 0
-label WHILE_EXP0
-push local 0
-push constant 0
-eq
-not
-if-goto WHILE_END0
-call Keyboard.keyPressed 0
-pop local 0
-goto WHILE_EXP0
-label WHILE_END0
 push constant 0
 return

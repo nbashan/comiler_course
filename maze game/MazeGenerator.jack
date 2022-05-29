@@ -1,75 +1,54 @@
 class MazeGenerator {
 	
-	function void generate(Array grid, PseudoRand rng, int mazeWidth, int mazeHeight) {
-		do MazeGenerator.carvePassageFrom(0, 0, grid, rng, mazeWidth, mazeHeight);
+
+	// Each array represents a row. Each integer represent a cell
+	// The value of the cell is an integer which functions like an array of booleans
+	// and represents the possible directions to go from the current cell.
+	// bit 0, value-1, direction-up
+	// bit 1, value-2, direction-down
+	// bit 2, value-4, direction-right
+	// bit 3, value-8, direction-left
+
+	function void generate(Array grid, int level) {
+		if (level = 1)  {
+			do MazeGenerator.strToArray("ekgmommmoiemmmmk", grid[0]);
+			do MazeGenerator.strToArray("cdfidgmonmkgmmml", grid[1]);
+			do MazeGenerator.strToArray("fnkejdejgmpjemkd", grid[2]);
+			do MazeGenerator.strToArray("emnmkhmkbgjgmkfl", grid[3]);
+			do MazeGenerator.strToArray("gmoiddgnifidgnib", grid[4]);
+			do MazeGenerator.strToArray("bgjgjbfmmmmlfmmk", grid[5]);
+			do MazeGenerator.strToArray("epmnmmkgmmkbgmol", grid[6]);
+			do MazeGenerator.strToArray("eniemmnnienmjejb", grid[7]);
+		}
+		else {
+			do MazeGenerator.strToArray("emkgmommmkeomiek", grid[0]);
+			do MazeGenerator.strToArray("giddejgmkfmlgmol", grid[1]);
+			do MazeGenerator.strToArray("dgjfmmjgnienjejd", grid[2]);
+			do MazeGenerator.strToArray("fnmmmkgjgmoiccgj", grid[3]);
+			do MazeGenerator.strToArray("gmigidfmjgnifnni", grid[4]);
+			do MazeGenerator.strToArray("hmmjgnmmkhigomoi", grid[5]);
+			do MazeGenerator.strToArray("fmomleoidfmjbgnk", grid[6]);
+			do MazeGenerator.strToArray("emnififmnmmmmjej", grid[7]);
+		}
 		return;
 	}
 
 
-	function void carvePassageFrom(int cx, int cy, Array grid, PseudoRand rng, int mazeWidth, int mazeHeight) {
-		var int nextRand, temp, direction, opposite, nx, ny, taken, pw;
-		var Array tempArr;
-		let taken = 0;
-	
-		//let N = 1  north
-		//let S = 2  south
-		//let E = 4  east
-		//let W = 8  west
+	// converts char string to array of integers
+	// a = 0 ,b = 1, c = 2 ...
+	function void strToArray (String str, Array arr){
+		var int len, i;
+		var char tempChar;
+		let len = str.length();
 
-		let temp = 0;
-		while(temp < 4){
-			let nextRand = rng.next(4);
-			//let nextRand = 4;
-			let pw = ExtendedMath.pow(2, nextRand);
-			while((taken & pw) = pw){
-				let nextRand = nextRand + 1;
-				//if((nextRand > 4 | nextRand = 4) = true){
-				if(nextRand > 4 | nextRand = 4){
-					let nextRand = nextRand - 4;
-				}
-				let pw = ExtendedMath.pow(2, nextRand);
-			}
-			let nx = cx;
-			let ny = cy;
-			//let taken = taken | pw;
-			let taken = taken + pw;
-
-			let direction = pw;
-			if(nextRand = 0){
-				//let direction = 1;
-				let opposite = 2;
-				let ny = ny - 1;
-			}
-			if(nextRand = 1){
-				//let direction = 2;
-				let opposite = 1;
-				let ny = ny + 1;
-			}
-			if(nextRand = 2){
-				//let direction = 4;
-				let opposite = 8;
-				let nx = nx + 1;
-			}
-			if(nextRand = 3){
-				//let direction = 8;
-				let opposite = 4;
-				let nx = nx - 1;
-			}
-	
-			if((ny > -1) & (ny < mazeHeight) & (nx > -1) & (nx < mazeWidth)){ // if next cell is within the borders 
-				let tempArr = grid[ny];
-				if(tempArr[nx] = 0){ // if the cell wasn't visited yet
-					//let tempArr[nx] = tempArr[nx] | opposite; //add opposite direction
-					let tempArr[nx] = opposite; //instead of deleted row
-					let tempArr = grid[cy];
-					let tempArr[cx] = tempArr[cx] | direction; //add curent direction
-					do MazeGenerator.carvePassageFrom(nx, ny, grid, rng, mazeWidth, mazeHeight);
-				}
-			}
-			let temp = temp + 1;
+		let i=0;
+		while (i<len){
+			let arr[i] =str.charAt(i)-97;
+			let i =i+1;
 		}
 
 		return;
+
 	}
 
 }

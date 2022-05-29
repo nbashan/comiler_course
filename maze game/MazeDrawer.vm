@@ -48,28 +48,32 @@ push constant 1
 sub
 call Screen.drawRectangle 4
 pop temp 0
-label WHILE_EXP0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+label LABEL_1
 push local 0
 push argument 6
 lt
 not
-if-goto WHILE_END0
-push local 0
+if-goto LABEL_0
 push argument 0
+push local 0
 add
 pop pointer 1
 push that 0
 pop local 3
 push constant 0
 pop local 1
-label WHILE_EXP1
+label LABEL_3
 push local 1
 push argument 5
 lt
 not
-if-goto WHILE_END1
-push local 1
+if-goto LABEL_2
 push local 3
+push local 1
 add
 pop pointer 1
 push that 0
@@ -79,9 +83,9 @@ push constant 4
 and
 push constant 0
 eq
-if-goto IF_TRUE0
-goto IF_FALSE0
-label IF_TRUE0
+if-goto LABEL_4
+goto LABEL_5
+label LABEL_4
 push local 1
 push local 0
 push argument 1
@@ -90,15 +94,17 @@ push argument 3
 push argument 4
 call MazeDrawer.drawEastWall 6
 pop temp 0
-label IF_FALSE0
+goto LABEL_6
+label LABEL_5
+label LABEL_6
 push local 2
 push constant 2
 and
 push constant 0
 eq
-if-goto IF_TRUE1
-goto IF_FALSE1
-label IF_TRUE1
+if-goto LABEL_7
+goto LABEL_8
+label LABEL_7
 push local 1
 push local 0
 push argument 1
@@ -107,19 +113,23 @@ push argument 3
 push argument 4
 call MazeDrawer.drawSouthWall 6
 pop temp 0
-label IF_FALSE1
+goto LABEL_9
+label LABEL_8
+label LABEL_9
 push local 1
 push constant 1
 add
 pop local 1
-goto WHILE_EXP1
-label WHILE_END1
+goto LABEL_3
+label LABEL_2
+call Output.println 0
+pop temp 0
 push local 0
 push constant 1
 add
 pop local 0
-goto WHILE_EXP0
-label WHILE_END0
+goto LABEL_1
+label LABEL_0
 push constant 0
 return
 function MazeDrawer.drawEastWall 0

@@ -21,7 +21,7 @@ class CompilationEngine {
   var currentClass : String
   var currentFunction: String
   var functionType: String
-  public static var _labelIndex:int as labelIndex = 0
+  public var _labelIndex:int as labelIndex = 0
 
   public construct(inputFile : String, outputFile : String) {
     parser = new Tokenizer(inputFile)
@@ -472,7 +472,7 @@ class CompilationEngine {
           parser.advance()
 
           //subroutineName
-          if (classTable.TypeOf(parser.getToken())=="") {  // method of another class
+          if (classTable.TypeOf(varName)=="") {  // method of another class
             varName = varName + "." + parser.getToken()
 
           }
@@ -595,7 +595,7 @@ class CompilationEngine {
     return opCommand
   }
 
- public static function newLabel(): String{
+  public function newLabel(): String{
    var  ret = "LABEL_" + (labelIndex)
    labelIndex += 1
    return ret

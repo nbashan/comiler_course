@@ -15,10 +15,10 @@ class Player{
 	method int getY(){
 		return y;
 	}
-	//let N = 1  north
-	//let S = 2  south
-	//let E = 4  east
-	//let W = 8  west
+	// up -1
+	// down -2
+	// right -4
+	// left- 8
 
 	method void go(int direction){
 

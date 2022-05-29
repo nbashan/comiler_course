@@ -12,11 +12,14 @@ class MazeDrawer {
 		do Screen.drawRectangle(originX + 1, originY + 1, originX + (xCount * blockWidth) - 1, originY + (yCount * blockHeight) - 1);
 
 		
+		do Screen.setColor(true);
 		while(y < yCount){
+			
 			let tempArr = maze[y];
 			let x = 0;
 			while(x < xCount){
 				let val = tempArr[x];
+				
 				if((val & 4) = 0){
 					do MazeDrawer.drawEastWall(x, y, originX, originY, blockWidth, blockHeight);
 				}
@@ -27,6 +30,7 @@ class MazeDrawer {
 				
 				let x = x + 1;
 			}
+			do Output.println();
 			let y = y + 1;
 		}
 

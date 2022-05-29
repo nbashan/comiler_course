@@ -1,36 +1,33 @@
 class Main {
 	function void main() {
-		var int startRand, temp, temp2, mazeWidth, mazeHeight, xOrigin, yOrigin, bw, bh, padding;
-        var PseudoRand rng;
+		var int temp, temp2, mazeWidth, mazeHeight, xOrigin, yOrigin, bw, bh, padding, level;
         var Array maze, tempArr;
        	var Player player;
        	var PlayerController controller;
-		var char play_again;
+		
        	//maze width indicates number of blocks right to left
        	//maze height indicates number of blocks top to bottom
 
        	//Settings
        	let mazeWidth = 16; //number of columns
-       	let mazeHeight = 8; //number of rows //original is 10
-       	let xOrigin = 8; //changed from 104
+       	let mazeHeight = 8; //number of rows
+       	let xOrigin = 8; 
        	let yOrigin = 8;
-       	let bw = 31; //block width //original is 24
-       	let bh = 30; //block height //original is 24
-       	let padding = 6;
+       	let bw = 31; //block width
+       	let bh = 30; //block height
+		let padding = 6;
 
-		   
-		//do PlayHelper.drawPlayHelper();
-		//let startRand = Main.getFirstKeyPressed();
-		let startRand = 1;
-		let rng = PseudoRand.def(startRand); //user input is the seed
+	
 		
-		//do Screen.setColor(false);
-		//do Screen.drawRectangle(96, 0, 511, 255);
-		let play_again = 89; //"Y"
+		let level = 1; 
 	
-		while (play_again =89) { //added loop to play again
-			// code
-	
+		while (level < 3) { //added loop to play again
+			do Screen.setColor(true);
+			do Output.moveCursor(11, 24);
+			do Output.printString("level ");
+			do Output.printInt(level);
+			do Sys.wait(3000);
+			do Screen.clearScreen();
 
 			// create a 2 dimension array and set all values to 0
 			let maze = Array.new(mazeHeight); //array of arrays
@@ -47,32 +44,25 @@ class Main {
 			}
 
 
-			do MazeGenerator.generate(maze, rng, mazeWidth, mazeHeight);
+			do MazeGenerator.generate(maze, level);
 			//Array maze, int originX, int originY, int blockWidth, int blockHeight, int xCount, int yCount
 			do MazeDrawer.drawMaze(maze, xOrigin, yOrigin, bw, bh, mazeWidth, mazeHeight);
-
 			let player = Player.new(0, 0); //starting point is top left
 
 			let controller = PlayerController.new(player, maze, xOrigin, yOrigin,
 			bw, bh, mazeWidth, mazeHeight, padding);
 
 			do Main.drawEndPoint(xOrigin, yOrigin, bw, bh, mazeWidth, mazeHeight, 8);
-			
 
 			do controller.loop();
 
-			do Screen.setColor(false);
-			do Screen.drawRectangle(0, 0, 511, 255);
+			do Screen.clearScreen();
 
-			do Screen.setColor(true);
-			do Output.moveCursor(11, 24);
-			do Output.printString("Play Again? Y/N");
-			
-			let  play_again=Keyboard.readChar();
-						
-
+			let level =level+1;
 		}
 		
+		do Output.moveCursor(11, 24);
+		do Output.printString("The End");		 
 		return;
 	}
 
@@ -80,25 +70,6 @@ class Main {
 		do Screen.setColor(true);
 		do Screen.drawCircle(baseX + ((xc - 1) * bw) + (bw / 2),
 			baseY + (bh / 2), rad);
-		return;
-	}
-
-	function int getFirstKeyPressed(){
-		var char key;
-		let key = 0;
-		while(key = 0){
-			let key = Keyboard.keyPressed();
-		}
-		return key;
-	}
-
-	function void playAgain(){
-		var char key;
-		let key = 0;
-		while(key = 0){
-			let key = Keyboard.keyPressed();
-		 
-		}
 		return;
 	}
 
