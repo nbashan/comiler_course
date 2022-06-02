@@ -20,9 +20,13 @@ class Tokenizer {
   private static var intReg = '[0-9]+'
   private static var strReg = '"[^"\n]*"'
   private static var idReg = '[a-zA-Z_][\\w]*'
-  private static var commentReg ="//|/\\*\\*|\\*/"
+  private static var commentReg ="//|/\\*\\*"
+  private static var endCommentReg ="\\*/"
   private static var allReg = commentReg+'|'+symbolReg+'|'+intReg+'|'+strReg +'|'+idReg
   private static var regPattern: Pattern
+  private static var endCommentPattern: Pattern
+  private static var endCommentMatcher: Matcher
+  private static var compIndex =0
 
 
   //opens the input file/stream and gets ready to parse it
@@ -30,6 +34,7 @@ class Tokenizer {
     var file_read=new FileReader(inputFile)
     reader=new BufferedReader(file_read)
     regPattern =Pattern.compile(allReg)
+    endCommentPattern =Pattern.compile(endCommentReg)
     matched= regPattern.matcher(reader.readLine())
 
   }
@@ -47,28 +52,32 @@ class Tokenizer {
         current_line = reader.readLine()
         if (current_line == null)
           return false
-        else
+        else {
           matched = regPattern.matcher(current_line)
+          found =matched.find()
+        }
       }
-      else
+      else {
         endComment()
-      found = matched.find()
+        matched = regPattern.matcher(current_line)
+        found =matched.find(endCommentMatcher.end())
+      }
     }
+
     return true
 
     //curerent_command = reader.readLine()
     //return curerent_command != null
   }
   private function endComment(){
-    var found = false
+    endCommentMatcher =endCommentPattern.matcher(current_line)
+    var found = endCommentMatcher.find(matched.end())
     while (!found) {
-      while (!matched.find()) {
         current_line = reader.readLine()
-        matched = regPattern.matcher(current_line)
-      }
-      if(matched.group()=="*/")
-        found = true
+        endCommentMatcher= endCommentPattern.matcher(current_line)
+        found = endCommentMatcher.find()
     }
+    matched = regPattern.matcher(current_line)
     return
   }
 
